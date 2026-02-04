@@ -40,11 +40,7 @@
 
 <script>
     const USER = "dogierez01";
-    
-    // ▼▼▼ IT HAS THE DASH NOW ▼▼▼
     const REPO = "Daily-Conversations-"; 
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-
     const BRANCH = "main";
     const API_URL = `https://api.github.com/repos/${USER}/${REPO}/contents/`;
     const RAW_URL = `https://raw.githubusercontent.com/${USER}/${REPO}/${BRANCH}/`;
@@ -60,7 +56,6 @@
         try {
             const response = await fetch(API_URL);
             
-            // ERROR CATCHER
             if (response.status === 404) throw new Error("REPO NAME NOT FOUND. Check spelling.");
             if (!response.ok) throw new Error(`Connection failed: Error ${response.status}`);
             
@@ -71,18 +66,27 @@
                 let lower = file.name.toLowerCase();
                 if (lower.endsWith('.md') || lower.endsWith('.html') || lower.endsWith('.css') || lower.startsWith('.')) return;
 
+                // 1. EXTRACT THE NUMBER (Before we clean it!)
+                let numberMatch = lower.match(/\d+/);
+                let sortOrder = numberMatch ? parseInt(numberMatch[0]) : 999; // If no number, put it at the end
+
+                // 2. CLEAN THE NAME (Remove numbers for display)
                 let clean = lower.replace(/\.[^/.]+$/, "").replace(/[0-9]/g, "").trim();
                 let id = clean.replace(/[^a-z]/g, ""); 
                 let displayName = clean.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
 
-                if (!items[id]) items[id] = { name: displayName, audio: [], img: "" };
+                // 3. STORE THE ORDER
+                if (!items[id]) items[id] = { name: displayName, audio: [], img: "", order: sortOrder };
 
                 if (lower.includes("wav") || lower.includes("mp3")) items[id].audio.push(file.name);
                 else if (lower.includes("jpg") || lower.includes("png") || lower.includes("jpeg")) items[id].img = file.name;
             });
 
             let finalItems = Object.values(items).filter(f => f.audio.length > 0 || f.img);
-            finalItems.sort((a, b) => a.name.localeCompare(b.name));
+
+            // 4. SORT BY NUMBER (Instead of Name)
+            finalItems.sort((a, b) => a.order - b.order);
+
             render(finalItems);
             status.style.display = 'none';
 
