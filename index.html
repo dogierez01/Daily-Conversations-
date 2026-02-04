@@ -15,20 +15,21 @@
         .card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; background: #333; border: 2px solid #555; }
         .info { flex-grow: 1; }
         
-        /* UPDATED NAME LAYOUT */
-        .name { font-weight: bold; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; font-size: 18px; text-transform: capitalize; color: #fff; }
+        .name { font-weight: bold; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; font-size: 18px; text-transform: capitalize; color: #fff; }
         
-        /* ▼▼▼ THE NEW "BALD" BADGE STYLE ▼▼▼ */
+        /* ▼▼▼ RED & BIGGER BADGE ▼▼▼ */
         .order-badge { 
-            background: #4dabf7; /* Bright Blue background for pop */
-            color: #000; /* Black text for contrast */
-            font-size: 16px; /* BIGGER */
-            padding: 4px 10px; /* More space */
-            border-radius: 20px; /* Rounder shape */
-            font-weight: 800; /* EXTRA BOLD ("Bald") */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            background: #ff3b30; /* BRIGHT RED */
+            color: #ffffff; /* Pure White Text */
+            font-size: 22px; /* MUCH BIGGER */
+            padding: 6px 14px; /* Fatter box */
+            border-radius: 8px; /* Slightly square for a "Tag" look */
+            font-weight: 900; /* SUPER BOLD */
+            box-shadow: 0 4px 10px rgba(255, 59, 48, 0.4); /* Red Glow */
+            min-width: 30px;
+            text-align: center;
         }
-        /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+        /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
 
         .btn-play { border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; color: white; background: #2f9e44; }
         #status { text-align: center; color: #666; font-size: 12px; margin-top: 10px; }
@@ -80,15 +81,12 @@
                 let lower = file.name.toLowerCase();
                 if (lower.endsWith('.md') || lower.endsWith('.html') || lower.endsWith('.css') || lower.startsWith('.')) return;
 
-                // 1. CLEANING LOGIC
                 let clean = lower.replace(/\.[^/.]+$/, "").replace(/[0-9]/g, "").trim();
                 let id = clean.replace(/[^a-z]/g, ""); 
                 let displayName = clean.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
 
-                // 2. CREATE ITEM IF NEW
                 if (!items[id]) items[id] = { name: displayName, audio: [], img: "", order: 999 };
 
-                // 3. GREEDY NUMBER FINDER
                 let numberMatch = file.name.match(/^(\d+)/);
                 if (numberMatch) {
                     let num = parseInt(numberMatch[0]);
@@ -102,8 +100,6 @@
             });
 
             let finalItems = Object.values(items).filter(f => f.audio.length > 0 || f.img);
-
-            // 4. SORT BY NUMBER
             finalItems.sort((a, b) => a.order - b.order);
 
             render(finalItems);
