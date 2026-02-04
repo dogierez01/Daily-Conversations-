@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Situation Dialogues</title>
+    <title>Daily Conversations</title>
     <style>
         /* DARK MODE & LAYOUT */
         body { font-family: -apple-system, sans-serif; background: #121212; color: #e0e0e0; padding: 20px; padding-top: 140px; max-width: 600px; margin: 0 auto; }
@@ -44,7 +44,7 @@
         <audio id="player" controls controlsList="nodownload"></audio>
     </div>
 
-    <input type="text" class="search" placeholder="Search dialogues..." onkeyup="filter(this.value)">
+    <input type="text" class="search" placeholder="Search conversations..." onkeyup="filter(this.value)">
     <div id="list"></div>
     <div id="status">Loading...</div>
 
@@ -56,9 +56,9 @@
 <script>
     const USER = "dogierez01";
     
-    // ▼▼▼ I PRE-FILLED THIS FOR YOU ▼▼▼
-    const REPO = "situation-dialogues"; 
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+    // ▼▼▼ UPDATED TO MATCH YOUR NEW NAME ▼▼▼
+    const REPO = "Daily-Conversations"; 
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     const BRANCH = "main";
     const API_URL = `https://api.github.com/repos/${USER}/${REPO}/contents/`;
@@ -74,7 +74,7 @@
     async function init() {
         try {
             const response = await fetch(API_URL);
-            if (!response.ok) throw new Error("Connection failed (Did you name the repo 'situation-dialogues'?)");
+            if (!response.ok) throw new Error("Connection failed (Check repo name or file uploads)");
             const files = await response.json();
             let items = {};
 
