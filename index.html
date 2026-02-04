@@ -14,9 +14,22 @@
         .img-container { text-align: center; cursor: zoom-in; flex-shrink: 0; }
         .card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; background: #333; border: 2px solid #555; }
         .info { flex-grow: 1; }
-        /* Added display:flex to name so we can put the number next to it nicely */
-        .name { font-weight: bold; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 17px; text-transform: capitalize; color: #fff; }
-        .order-badge { background: #333; color: #aaa; font-size: 12px; padding: 2px 6px; border-radius: 4px; font-weight: normal; }
+        
+        /* UPDATED NAME LAYOUT */
+        .name { font-weight: bold; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; font-size: 18px; text-transform: capitalize; color: #fff; }
+        
+        /* ▼▼▼ THE NEW "BALD" BADGE STYLE ▼▼▼ */
+        .order-badge { 
+            background: #4dabf7; /* Bright Blue background for pop */
+            color: #000; /* Black text for contrast */
+            font-size: 16px; /* BIGGER */
+            padding: 4px 10px; /* More space */
+            border-radius: 20px; /* Rounder shape */
+            font-weight: 800; /* EXTRA BOLD ("Bald") */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+
         .btn-play { border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; color: white; background: #2f9e44; }
         #status { text-align: center; color: #666; font-size: 12px; margin-top: 10px; }
         #modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); align-items: center; justify-content: center; flex-direction: column; }
@@ -67,7 +80,7 @@
                 let lower = file.name.toLowerCase();
                 if (lower.endsWith('.md') || lower.endsWith('.html') || lower.endsWith('.css') || lower.startsWith('.')) return;
 
-                // 1. CLEANING LOGIC (Standard clean for ID)
+                // 1. CLEANING LOGIC
                 let clean = lower.replace(/\.[^/.]+$/, "").replace(/[0-9]/g, "").trim();
                 let id = clean.replace(/[^a-z]/g, ""); 
                 let displayName = clean.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
@@ -76,12 +89,9 @@
                 if (!items[id]) items[id] = { name: displayName, audio: [], img: "", order: 999 };
 
                 // 3. GREEDY NUMBER FINDER
-                // Check if THIS specific file starts with a number (e.g., "01_airport...")
                 let numberMatch = file.name.match(/^(\d+)/);
                 if (numberMatch) {
                     let num = parseInt(numberMatch[0]);
-                    // If we found a number, assign it to the item!
-                    // We take the lowest number found (just in case)
                     if (items[id].order === 999 || num < items[id].order) {
                         items[id].order = num;
                     }
@@ -93,7 +103,7 @@
 
             let finalItems = Object.values(items).filter(f => f.audio.length > 0 || f.img);
 
-            // 4. SORT BY NUMBER (The Fix)
+            // 4. SORT BY NUMBER
             finalItems.sort((a, b) => a.order - b.order);
 
             render(finalItems);
@@ -114,7 +124,7 @@
                 <div class="info">
                     <span class="name">
                         ${f.order !== 999 ? `<span class="order-badge">#${f.order}</span>` : ''} 
-                        ${f.name}
+                        <span>${f.name}</span>
                     </span>
                     <div class="btn-container">
                         ${f.audio.map(file => `<button class="btn-play" onclick="play('${file}')">▶ Play Audio</button>`).join('')}
